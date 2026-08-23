@@ -1,0 +1,9 @@
+fastapi
+uvicorn
+sqlalchemy
+python-multipart
+python-jose
+bcrypt
+python-dotenv
+azure-storage-blob
+email-validator
