@@ -1386,7 +1386,7 @@ async def upload_file(
 
 
     db.add(record)
-        db.commit()
+    db.commit()
 
     db.refresh(record)
 
