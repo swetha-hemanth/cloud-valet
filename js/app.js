@@ -8,7 +8,8 @@
 // CONFIGURATION
 // ============================================================
 
-const API_URL = "https://cloud-valet.onrender.com";
+const API_URL =
+    "https://cloud-valet.onrender.com";
 
 const TOKEN = localStorage.getItem(
     "cloudvault_token"

@@ -3,8 +3,8 @@
 // Login + Registration + Email OTP Verification
 // ============================================================
 
-
-const API_URL = "https://cloud-valet.onrender.com";
+const API_URL =
+    "https://cloud-valet.onrender.com";
 
 
 let mode =
