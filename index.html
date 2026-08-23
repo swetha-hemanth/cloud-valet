@@ -1,0 +1,1288 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>CloudVault - Secure Cloud Storage</title>
+
+    <link
+        rel="stylesheet"
+        href="css/style.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    >
+
+</head>
+
+
+<body>
+
+
+<div class="app">
+
+
+    <!-- =====================================================
+         SIDEBAR
+    ====================================================== -->
+
+    <aside class="sidebar">
+
+
+        <div class="logo">
+
+            <div class="logo-icon">
+
+                <i class="fa-solid fa-cloud"></i>
+
+            </div>
+
+            <h2>CloudVault</h2>
+
+        </div>
+
+
+        <!-- NEW BUTTON -->
+
+        <div class="new-wrapper">
+
+            <button
+                class="new-btn"
+                id="newBtn"
+            >
+
+                <i class="fa-solid fa-plus"></i>
+
+                New
+
+            </button>
+
+
+            <div
+                class="new-menu"
+                id="newMenu"
+            >
+
+                <button data-new="folder">
+
+                    <i class="fa-solid fa-folder-plus"></i>
+
+                    New Folder
+
+                </button>
+
+
+                <div class="menu-divider"></div>
+
+
+                <button data-new="file">
+
+                    <i class="fa-solid fa-file-arrow-up"></i>
+
+                    File Upload
+
+                </button>
+
+
+                <button data-new="folderUpload">
+
+                    <i class="fa-solid fa-folder-open"></i>
+
+                    Folder Upload
+
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <!-- HIDDEN INPUTS -->
+
+        <input
+            type="file"
+            id="fileInput"
+            multiple
+            hidden
+        >
+
+
+        <input
+            type="file"
+            id="folderInput"
+            webkitdirectory
+            multiple
+            hidden
+        >
+
+
+        <!-- NAVIGATION -->
+
+        <nav class="sidebar-menu">
+
+
+            <button
+                class="menu-item active"
+                data-page="drive"
+            >
+
+                <i class="fa-solid fa-hard-drive"></i>
+
+                <span>My Drive</span>
+
+            </button>
+
+
+            <button
+                class="menu-item"
+                data-page="shared"
+            >
+
+                <i class="fa-solid fa-user-group"></i>
+
+                <span>Shared with me</span>
+
+            </button>
+
+
+            <button
+                class="menu-item"
+                data-page="recent"
+            >
+
+                <i class="fa-solid fa-clock"></i>
+
+                <span>Recent</span>
+
+            </button>
+
+
+            <button
+                class="menu-item"
+                data-page="starred"
+            >
+
+                <i class="fa-solid fa-star"></i>
+
+                <span>Starred</span>
+
+            </button>
+
+
+            <button
+                class="menu-item"
+                id="vaultMenu"
+            >
+
+                <i class="fa-solid fa-lock"></i>
+
+                <span>Locked Folder</span>
+
+            </button>
+           
+
+
+<button
+    class="menu-item"
+    data-page="activity"
+>
+    <i class="fa-solid fa-clock-rotate-left"></i>
+    <span>Activity</span>
+</button>
+
+
+
+
+
+            <button
+                class="menu-item"
+                data-page="trash"
+            >
+
+                <i class="fa-solid fa-trash"></i>
+
+                <span>Trash</span>
+
+            </button>
+
+
+        </nav>
+
+
+        <!-- STORAGE -->
+
+        <div class="storage-section">
+
+
+            <div class="storage-title">
+
+                <span>
+
+                    <i class="fa-solid fa-cloud"></i>
+
+                    Storage
+
+                </span>
+
+
+                <span id="storagePercent">
+
+                    0%
+
+                </span>
+
+            </div>
+
+
+            <div class="storage-bar">
+
+                <div
+                    class="storage-used"
+                    id="storageUsed"
+                ></div>
+
+            </div>
+
+
+            <p id="storageText">
+
+                0 MB of 15 GB used
+
+            </p>
+
+
+            <button
+                class="upgrade-btn"
+                id="upgradeBtn"
+            >
+
+                Upgrade Storage
+
+            </button>
+
+
+        </div>
+
+
+    </aside>
+
+
+    <!-- =====================================================
+         MAIN
+    ====================================================== -->
+
+    <main class="main">
+
+
+        <!-- TOP BAR -->
+
+        <header class="topbar">
+
+
+            <div class="search-box">
+
+                <i class="fa-solid fa-magnifying-glass"></i>
+
+
+                <input
+                    type="text"
+                    id="searchInput"
+                    placeholder="Search in CloudVault"
+                >
+
+
+                <i class="fa-solid fa-sliders"></i>
+
+            </div>
+
+
+            <div class="top-actions">
+
+
+                <button
+                    class="icon-btn"
+                    id="helpBtn"
+                >
+
+                    <i class="fa-regular fa-circle-question"></i>
+
+                </button>
+
+
+                <button
+                    class="icon-btn"
+                    id="settingsBtn"
+                >
+
+                    <i class="fa-solid fa-gear"></i>
+
+                </button>
+
+
+                <button
+                    class="icon-btn notification"
+                    id="notificationBtn"
+                >
+
+                    <i class="fa-regular fa-bell"></i>
+
+                    <span class="notification-dot"></span>
+
+                </button>
+
+
+                <div
+                    class="profile"
+                    id="profileBtn"
+                >
+
+                    <div class="profile-image">
+
+                        U
+
+                    </div>
+
+
+                    <div class="profile-text">
+
+                        <strong>User</strong>
+
+                        <span>CloudVault User</span>
+
+                    </div>
+
+
+                    <i class="fa-solid fa-chevron-down"></i>
+
+                </div>
+
+
+            </div>
+
+
+        </header>
+
+
+        <!-- CONTENT -->
+
+        <section class="content">
+
+
+            <!-- NORMAL DRIVE -->
+
+            <div id="driveArea">
+
+
+                <div class="content-header">
+
+
+                    <div>
+
+                        <h1 id="pageTitle">
+
+                            My Drive
+
+                        </h1>
+
+
+                        <p id="pageDescription">
+
+                            Store, manage and share your files securely.
+
+                        </p>
+
+                    </div>
+
+
+                    <div class="view-actions">
+
+
+                        <button
+                            class="view-btn active"
+                            id="gridViewBtn"
+                        >
+
+                            <i class="fa-solid fa-border-all"></i>
+
+                        </button>
+
+
+                        <button
+                            class="view-btn"
+                            id="listViewBtn"
+                        >
+
+                            <i class="fa-solid fa-list"></i>
+
+                        </button>
+
+
+                    </div>
+
+
+                </div>
+
+
+                <!-- QUICK ACCESS -->
+
+                <section id="quickSection">
+
+
+                    <div class="section-heading">
+
+                        <h3>Quick Access</h3>
+
+                    </div>
+
+
+                    <div class="quick-grid">
+
+
+                        <div class="quick-card">
+
+                            <div class="quick-icon pdf">
+
+                                <i class="fa-solid fa-file-pdf"></i>
+
+                            </div>
+
+
+                            <div>
+
+                                <strong>
+                                    Project Report.pdf
+                                </strong>
+
+                                <span>
+                                    Cloud Project
+                                </span>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="quick-card">
+
+                            <div class="quick-icon word">
+
+                                <i class="fa-solid fa-file-word"></i>
+
+                            </div>
+
+
+                            <div>
+
+                                <strong>
+                                    Cloud Notes.docx
+                                </strong>
+
+                                <span>
+                                    Documents
+                                </span>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="quick-card">
+
+                            <div class="quick-icon image">
+
+                                <i class="fa-solid fa-image"></i>
+
+                            </div>
+
+
+                            <div>
+
+                                <strong>
+                                    Architecture.png
+                                </strong>
+
+                                <span>
+                                    Project Design
+                                </span>
+
+                            </div>
+
+                        </div>
+
+
+                    </div>
+
+
+                </section>
+
+
+                <!-- FOLDERS -->
+
+                <section id="folderSection">
+
+
+                    <div class="section-heading">
+
+                        <h3>Folders</h3>
+
+                    </div>
+
+
+                    <div
+                        class="folder-grid"
+                        id="folderGrid"
+                    ></div>
+
+
+                </section>
+
+
+                <!-- FILES -->
+
+                <section>
+
+
+                    <div class="section-heading">
+
+                        <h3 id="filesHeading">
+
+                            Files
+
+                        </h3>
+
+
+                        <span
+                            class="result-count"
+                            id="resultCount"
+                        ></span>
+
+                    </div>
+
+
+                    <div
+                        class="empty-state"
+                        id="emptyState"
+                    >
+
+                        <i class="fa-regular fa-folder-open"></i>
+
+                        <h3>No files found</h3>
+
+                        <p>
+                            Upload files using the New button.
+                        </p>
+
+                    </div>
+
+
+                    <div
+                        class="files-table"
+                        id="filesTable"
+                    >
+
+
+                        <div class="file-row file-header">
+
+                            <span>Name</span>
+
+                            <span>Owner</span>
+
+                            <span>Last Modified</span>
+
+                            <span>Size</span>
+
+                            <span></span>
+
+                        </div>
+
+
+                        <div id="fileRows"></div>
+
+
+                    </div>
+
+
+                </section>
+
+
+            </div>
+
+
+            <!-- =====================================================
+                 PRIVATE VAULT
+            ====================================================== -->
+
+            <div
+                class="private-vault"
+                id="privateVault"
+            >
+
+
+                <div class="vault-header">
+
+
+                    <div>
+
+                        <h1>
+
+                            <i class="fa-solid fa-shield-halved"></i>
+
+                            Private Vault
+
+                        </h1>
+
+
+                        <p>
+
+                            Your protected files and folders.
+
+                        </p>
+
+                    </div>
+
+
+                    <button
+                        class="lock-vault-btn"
+                        id="lockVaultBtn"
+                    >
+
+                        <i class="fa-solid fa-lock"></i>
+
+                        Lock Vault
+
+                    </button>
+
+
+                </div>
+
+
+                <div class="vault-security">
+
+
+                    <div class="vault-security-icon">
+
+                        <i class="fa-solid fa-shield"></i>
+
+                    </div>
+
+
+                    <div>
+
+                        <strong>
+                            Protected Area
+                        </strong>
+
+                        <p>
+
+                            Private files are separated from your normal drive.
+
+                        </p>
+
+                    </div>
+
+
+                </div>
+
+
+                <div class="vault-actions">
+
+
+                    <button id="vaultUploadBtn">
+
+                        <i class="fa-solid fa-file-arrow-up"></i>
+
+                        Upload Private File
+
+                    </button>
+
+
+                    <button id="vaultFolderBtn">
+
+                        <i class="fa-solid fa-folder-plus"></i>
+
+                        New Private Folder
+
+                    </button>
+
+
+                </div>
+
+
+                <input
+                    type="file"
+                    id="vaultFileInput"
+                    multiple
+                    hidden
+                >
+
+
+                <div
+                    class="vault-files"
+                    id="vaultFiles"
+                ></div>
+
+
+            </div>
+
+
+        </section>
+
+
+    </main>
+
+
+</div>
+
+
+<!-- =========================================================
+     FILE MENU
+========================================================= -->
+
+<div
+    class="context-menu"
+    id="fileMenu"
+>
+
+
+    <button data-action="preview">
+
+        <i class="fa-solid fa-eye"></i>
+
+        Preview
+
+    </button>
+
+
+    <button data-action="share">
+
+        <i class="fa-solid fa-user-plus"></i>
+
+        Share
+
+    </button>
+
+
+    <button data-action="rename">
+
+        <i class="fa-solid fa-pen"></i>
+
+        Rename
+
+    </button>
+
+
+    <button data-action="download">
+
+        <i class="fa-solid fa-download"></i>
+
+        Download
+
+    </button>
+
+
+    <button data-action="star">
+
+        <i class="fa-regular fa-star"></i>
+
+        <span>Add to Starred</span>
+
+    </button>
+
+
+    <button data-action="vault">
+
+        <i class="fa-solid fa-lock"></i>
+
+        Move to Locked Folder
+
+    </button>
+
+
+    <div class="menu-divider"></div>
+
+
+    <button
+        data-action="trash"
+        class="danger"
+    >
+
+        <i class="fa-solid fa-trash"></i>
+
+        Move to Trash
+
+    </button>
+
+
+</div>
+
+
+
+<!-- =========================================================
+     TRASH MENU
+========================================================= -->
+
+<div
+    class="context-menu"
+    id="trashMenu"
+>
+
+
+    <button data-trash-action="restore">
+
+        <i class="fa-solid fa-trash-arrow-up"></i>
+
+        Restore
+
+    </button>
+
+
+    <button
+        data-trash-action="delete"
+        class="danger"
+    >
+
+        <i class="fa-solid fa-trash-can"></i>
+
+        Delete Forever
+
+    </button>
+
+
+</div>
+
+
+<!-- =========================================================
+     LOCK MODAL
+========================================================= -->
+
+<div
+    class="overlay"
+    id="lockOverlay"
+>
+
+
+    <div class="modal lock-modal">
+
+
+        <button
+            class="modal-close"
+            data-close="lockOverlay"
+        >
+
+            <i class="fa-solid fa-xmark"></i>
+
+        </button>
+
+
+        <div class="big-security-icon">
+
+            <i class="fa-solid fa-lock"></i>
+
+        </div>
+
+
+        <h2>Locked Folder</h2>
+
+
+        <p>
+
+            Enter your PIN to access private files.
+
+        </p>
+
+
+        <input
+            class="modal-input pin-input"
+            type="password"
+            id="lockPin"
+            maxlength="4"
+            inputmode="numeric"
+            placeholder="••••"
+        >
+
+
+        <p
+            class="error-text"
+            id="lockError"
+        ></p>
+
+
+        <button
+            class="primary-btn"
+            id="unlockBtn"
+        >
+
+            <i class="fa-solid fa-unlock"></i>
+
+            Unlock Folder
+
+        </button>
+
+
+        <small class="demo-note">
+
+            Prototype PIN: 1234
+
+        </small>
+
+
+    </div>
+
+
+</div>
+
+
+<!-- =========================================================
+     SHARE MODAL
+========================================================= -->
+
+<div
+    class="overlay"
+    id="shareOverlay"
+>
+
+
+    <div class="modal share-modal">
+
+
+        <div class="modal-title-row">
+
+
+            <div>
+
+                <h2>Share File</h2>
+
+                <p id="shareFileName"></p>
+
+            </div>
+
+
+            <button
+                class="modal-close"
+                data-close="shareOverlay"
+            >
+
+                <i class="fa-solid fa-xmark"></i>
+
+            </button>
+
+
+        </div>
+
+
+        <label class="field-label">
+
+            Share with people
+
+        </label>
+
+
+        <div class="share-input-row">
+
+
+            <input
+                type="email"
+                id="shareEmail"
+                placeholder="Enter email address"
+            >
+
+
+            <select id="sharePermission">
+
+                <option value="Viewer">
+                    Viewer
+                </option>
+
+                <option value="Editor">
+                    Editor
+                </option>
+
+            </select>
+
+
+            <button id="addPersonBtn">
+
+                Share
+
+            </button>
+
+
+        </div>
+
+
+        <p
+            class="share-message"
+            id="shareMessage"
+        ></p>
+
+
+        <h3 class="modal-subtitle">
+
+            People with access
+
+        </h3>
+
+
+        <div id="peopleList"></div>
+
+
+        <div class="general-access">
+
+
+            <h3>General Access</h3>
+
+
+            <div class="access-row">
+
+
+                <div
+                    class="access-icon"
+                    id="accessIcon"
+                >
+
+                    <i class="fa-solid fa-lock"></i>
+
+                </div>
+
+
+                <div class="access-content">
+
+
+                    <select id="linkAccess">
+
+                        <option value="restricted">
+                            Restricted
+                        </option>
+
+                        <option value="anyone">
+                            Anyone with the link
+                        </option>
+
+                    </select>
+
+
+                    <p id="accessDescription">
+
+                        Only people added can access this file.
+
+                    </p>
+
+
+                </div>
+
+
+            </div>
+
+
+            <div class="expiry-row">
+
+                <label>
+                    Link Expiry
+                </label>
+
+
+                <select id="expirySelect">
+
+                    <option>Never</option>
+
+                    <option>1 Day</option>
+
+                    <option>7 Days</option>
+
+                    <option>30 Days</option>
+
+                </select>
+
+            </div>
+
+
+        </div>
+
+
+        <div class="copy-row">
+
+
+            <input
+                type="text"
+                id="shareLink"
+                readonly
+            >
+
+
+            <button id="copyLinkBtn">
+
+                <i class="fa-solid fa-link"></i>
+
+                Copy Link
+
+            </button>
+
+
+        </div>
+
+
+        <div class="modal-footer">
+
+            <button
+                class="primary-small"
+                data-close="shareOverlay"
+            >
+
+                Done
+
+            </button>
+
+        </div>
+
+
+    </div>
+
+
+</div>
+
+
+<!-- =========================================================
+     PREVIEW MODAL
+========================================================= -->
+
+<div
+    class="overlay"
+    id="previewOverlay"
+>
+
+
+    <div class="modal preview-modal">
+
+
+        <div class="modal-title-row">
+
+
+            <div>
+
+                <h2 id="previewName">
+
+                    File Preview
+
+                </h2>
+
+
+                <p id="previewInfo"></p>
+
+            </div>
+
+
+            <button
+                class="modal-close"
+                data-close="previewOverlay"
+            >
+
+                <i class="fa-solid fa-xmark"></i>
+
+            </button>
+
+
+        </div>
+
+
+        <div
+            class="preview-area"
+            id="previewArea"
+        ></div>
+
+
+    </div>
+
+
+</div>
+
+
+<!-- =========================================================
+     INFO MODAL
+========================================================= -->
+
+<div
+    class="overlay"
+    id="infoOverlay"
+>
+
+
+    <div class="modal small-modal">
+
+
+        <button
+            class="modal-close"
+            data-close="infoOverlay"
+        >
+
+            <i class="fa-solid fa-xmark"></i>
+
+        </button>
+
+
+        <div class="big-security-icon">
+
+            <i
+                id="infoIcon"
+                class="fa-solid fa-cloud"
+            ></i>
+
+        </div>
+
+
+        <h2 id="infoTitle">
+
+            CloudVault
+
+        </h2>
+
+
+        <p id="infoText"></p>
+
+
+        <button
+            class="primary-btn"
+            data-close="infoOverlay"
+        >
+
+            Done
+
+        </button>
+
+
+    </div>
+
+
+</div>
+
+
+<!-- TOAST -->
+
+<div
+    class="toast"
+    id="toast"
+>
+
+    <i class="fa-solid fa-circle-check"></i>
+
+    <span id="toastText"></span>
+
+</div>
+
+
+<!-- IMPORTANT: APP.JS MUST APPEAR ONLY ONCE -->
+
+<script src="js/app.js"></script>
+
+
+</body>
+
+</html>
