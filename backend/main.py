@@ -7,12 +7,11 @@ import os
 import uuid
 import json
 import random
-import smtplib
 
 from datetime import datetime, timedelta
-from email.message import EmailMessage
 
 import bcrypt
+import requests
 
 from jose import jwt, JWTError
 from dotenv import load_dotenv
@@ -79,27 +78,20 @@ if not AZURE_CONNECTION_STRING:
 
 
 # ============================================================
-# EMAIL SETTINGS
+# EMAIL SETTINGS - BREVO API
 # ============================================================
 
-SMTP_HOST = os.getenv(
-    "SMTP_HOST",
-    "smtp.gmail.com"
+BREVO_API_KEY = os.getenv(
+    "BREVO_API_KEY"
 )
 
-SMTP_PORT = int(
-    os.getenv(
-        "SMTP_PORT",
-        "587"
-    )
+BREVO_SENDER_EMAIL = os.getenv(
+    "BREVO_SENDER_EMAIL"
 )
 
-SMTP_EMAIL = os.getenv(
-    "SMTP_EMAIL"
-)
-
-SMTP_APP_PASSWORD = os.getenv(
-    "SMTP_APP_PASSWORD"
+BREVO_SENDER_NAME = os.getenv(
+    "BREVO_SENDER_NAME",
+    "CloudVault"
 )
 
 
@@ -136,7 +128,7 @@ models.Base.metadata.create_all(
 app = FastAPI(
     title="CloudVault API",
     description="Secure Cloud File Storage using Microsoft Azure",
-    version="3.0.0"
+    version="4.0.0"
 )
 
 
@@ -387,7 +379,7 @@ def verify_registration_otp(
 
 
 # ============================================================
-# SEND OTP EMAIL
+# SEND OTP EMAIL - BREVO HTTPS API
 # ============================================================
 
 def send_otp_email(
@@ -395,77 +387,224 @@ def send_otp_email(
     otp: str
 ):
 
-    if (
-        not SMTP_EMAIL
-        or
-        not SMTP_APP_PASSWORD
-    ):
+    if not BREVO_API_KEY:
 
         raise HTTPException(
             status_code=500,
-            detail="Email service is not configured"
+            detail="BREVO_API_KEY is not configured"
         )
 
-    message = EmailMessage()
+    if not BREVO_SENDER_EMAIL:
 
-    message["Subject"] = (
-        "CloudVault Email Verification"
+        raise HTTPException(
+            status_code=500,
+            detail="BREVO_SENDER_EMAIL is not configured"
+        )
+
+    url = (
+        "https://api.brevo.com/v3/smtp/email"
     )
 
-    message["From"] = SMTP_EMAIL
+    headers = {
 
-    message["To"] = email
+        "accept":
+            "application/json",
 
-    message.set_content(
-        f"""
-Welcome to CloudVault!
+        "api-key":
+            BREVO_API_KEY,
 
-Your email verification OTP is:
+        "content-type":
+            "application/json"
 
-{otp}
+    }
 
-This code expires in {OTP_EXPIRE_MINUTES} minutes.
+    payload = {
 
-Do not share this OTP with anyone.
+        "sender": {
 
-CloudVault
-Secure Cloud Storage
-"""
-    )
+            "name":
+                BREVO_SENDER_NAME,
+
+            "email":
+                BREVO_SENDER_EMAIL
+
+        },
+
+        "to": [
+
+            {
+
+                "email":
+                    email
+
+            }
+
+        ],
+
+        "subject":
+            "CloudVault Email Verification",
+
+        "htmlContent":
+            f"""
+            <html>
+
+            <body
+                style="
+                    margin:0;
+                    padding:30px;
+                    background:#f4f7fb;
+                    font-family:Arial,sans-serif;
+                "
+            >
+
+                <div
+                    style="
+                        max-width:520px;
+                        margin:auto;
+                        background:white;
+                        border-radius:18px;
+                        padding:35px;
+                        box-shadow:0 10px 35px rgba(0,0,0,0.08);
+                    "
+                >
+
+                    <h1
+                        style="
+                            color:#2563eb;
+                            margin-top:0;
+                        "
+                    >
+                        CloudVault
+                    </h1>
+
+
+                    <h2
+                        style="
+                            color:#111827;
+                        "
+                    >
+                        Verify your email
+                    </h2>
+
+
+                    <p
+                        style="
+                            color:#64748b;
+                            line-height:1.6;
+                        "
+                    >
+                        Use the verification code below
+                        to complete your CloudVault registration.
+                    </p>
+
+
+                    <div
+                        style="
+                            font-size:36px;
+                            font-weight:bold;
+                            letter-spacing:9px;
+                            color:#111827;
+                            text-align:center;
+                            background:#eff6ff;
+                            border-radius:14px;
+                            padding:22px;
+                            margin:28px 0;
+                        "
+                    >
+                        {otp}
+                    </div>
+
+
+                    <p
+                        style="
+                            color:#64748b;
+                        "
+                    >
+                        This code expires in
+                        {OTP_EXPIRE_MINUTES} minutes.
+                    </p>
+
+
+                    <p
+                        style="
+                            color:#64748b;
+                        "
+                    >
+                        Do not share this OTP with anyone.
+                    </p>
+
+
+                    <hr
+                        style="
+                            border:none;
+                            border-top:1px solid #e2e8f0;
+                            margin:28px 0;
+                        "
+                    >
+
+
+                    <p
+                        style="
+                            color:#94a3b8;
+                            font-size:13px;
+                        "
+                    >
+                        CloudVault • Secure Cloud Storage
+                    </p>
+
+                </div>
+
+            </body>
+
+            </html>
+            """
+    }
+
 
     try:
 
-        with smtplib.SMTP(
-            SMTP_HOST,
-            SMTP_PORT
-        ) as smtp:
+        response = requests.post(
+            url,
+            headers=headers,
+            json=payload,
+            timeout=20
+        )
 
-            smtp.ehlo()
 
-            smtp.starttls()
-
-            smtp.ehlo()
-
-            smtp.login(
-                SMTP_EMAIL,
-                SMTP_APP_PASSWORD
-            )
-
-            smtp.send_message(
-                message
-            )
-
-    except Exception as error:
+    except requests.RequestException as error:
 
         print(
-            "EMAIL ERROR:",
+            "BREVO CONNECTION ERROR:",
             error
+        )
+
+        raise HTTPException(
+            status_code=500,
+            detail="Unable to connect to email service"
+        )
+
+
+    if response.status_code not in (
+        200,
+        201,
+        202
+    ):
+
+        print(
+            "BREVO ERROR:",
+            response.status_code,
+            response.text
         )
 
         raise HTTPException(
             status_code=500,
             detail="Unable to send OTP email"
         )
+
+
+    print(
+        f"OTP email sent successfully to {email}"
+    )
 
 
 # ============================================================
@@ -484,6 +623,7 @@ def get_current_user(
             detail="Login required"
         )
 
+
     if not authorization.startswith(
         "Bearer "
     ):
@@ -493,10 +633,12 @@ def get_current_user(
             detail="Invalid authorization header"
         )
 
+
     token = authorization.split(
         " ",
         1
     )[1]
+
 
     try:
 
@@ -510,6 +652,7 @@ def get_current_user(
             "user_id"
         )
 
+
         if not user_id:
 
             raise HTTPException(
@@ -517,12 +660,14 @@ def get_current_user(
                 detail="Invalid token"
             )
 
+
     except JWTError:
 
         raise HTTPException(
             status_code=401,
             detail="Token expired or invalid"
         )
+
 
     user = (
 
@@ -535,7 +680,9 @@ def get_current_user(
         )
 
         .first()
+
     )
+
 
     if not user:
 
@@ -543,6 +690,7 @@ def get_current_user(
             status_code=401,
             detail="User not found"
         )
+
 
     return user
 
@@ -595,6 +743,7 @@ def file_to_dict(
 
         "modified_at":
             record.modified_at
+
     }
 
 
@@ -620,7 +769,9 @@ def get_user_file(
         )
 
         .first()
+
     )
+
 
     if not record:
 
@@ -628,6 +779,7 @@ def get_user_file(
             status_code=404,
             detail="File not found"
         )
+
 
     return record
 
@@ -656,8 +808,12 @@ def home():
         "authentication":
             "JWT + Email OTP",
 
+        "email_service":
+            "Brevo API",
+
         "message":
             "CloudVault Azure backend working successfully"
+
     }
 
 
@@ -672,6 +828,7 @@ def health():
 
         container_client.get_container_properties()
 
+
         return {
 
             "backend":
@@ -682,11 +839,13 @@ def health():
 
             "email_configured":
                 bool(
-                    SMTP_EMAIL
+                    BREVO_API_KEY
                     and
-                    SMTP_APP_PASSWORD
+                    BREVO_SENDER_EMAIL
                 )
+
         }
+
 
     except Exception as error:
 
@@ -698,8 +857,16 @@ def health():
             "azure":
                 "connection error",
 
+            "email_configured":
+                bool(
+                    BREVO_API_KEY
+                    and
+                    BREVO_SENDER_EMAIL
+                ),
+
             "detail":
                 str(error)
+
         }
 
 
@@ -722,12 +889,14 @@ def register_user(
 
     name = name.strip()
 
+
     if not name:
 
         raise HTTPException(
             status_code=400,
             detail="Name required"
         )
+
 
     if len(password) < 6:
 
@@ -736,9 +905,11 @@ def register_user(
             detail="Password must contain at least 6 characters"
         )
 
+
     email = validate_real_email(
         email.strip()
     )
+
 
     existing = (
 
@@ -751,7 +922,9 @@ def register_user(
         )
 
         .first()
+
     )
+
 
     if existing:
 
@@ -760,13 +933,16 @@ def register_user(
             detail="Email already registered"
         )
 
+
     otp = generate_otp()
+
 
     password_hash = (
         hash_password(
             password
         )
     )
+
 
     save_pending_registration(
         name,
@@ -775,14 +951,17 @@ def register_user(
         otp
     )
 
+
     send_otp_email(
         email,
         otp
     )
 
+
     print(
         f"OTP sent to {email}"
     )
+
 
     return {
 
@@ -794,6 +973,7 @@ def register_user(
 
         "verification_required":
             True
+
     }
 
 
@@ -818,10 +998,12 @@ def verify_registration(
         .lower()
     )
 
+
     otp = (
         otp
         .strip()
     )
+
 
     registration = (
         verify_registration_otp(
@@ -829,6 +1011,7 @@ def verify_registration(
             otp
         )
     )
+
 
     existing = (
 
@@ -841,7 +1024,9 @@ def verify_registration(
         )
 
         .first()
+
     )
+
 
     if existing:
 
@@ -850,10 +1035,12 @@ def verify_registration(
             None
         )
 
+
         raise HTTPException(
             status_code=400,
             detail="Email already registered"
         )
+
 
     user = models.User(
 
@@ -865,7 +1052,9 @@ def verify_registration(
 
         password_hash=
             registration["password_hash"]
+
     )
+
 
     db.add(user)
 
@@ -873,10 +1062,12 @@ def verify_registration(
 
     db.refresh(user)
 
+
     pending_registrations.pop(
         email,
         None
     )
+
 
     add_activity(
         db,
@@ -885,6 +1076,7 @@ def verify_registration(
         None,
         "Email verified and CloudVault account created"
     )
+
 
     return {
 
@@ -904,7 +1096,9 @@ def verify_registration(
 
             "email":
                 user.email
+
         }
+
     }
 
 
@@ -923,11 +1117,13 @@ def resend_otp(
         .lower()
     )
 
+
     registration = (
         pending_registrations.get(
             email
         )
     )
+
 
     if not registration:
 
@@ -936,13 +1132,14 @@ def resend_otp(
             detail="No pending registration found"
         )
 
-    new_otp = (
-        generate_otp()
-    )
+
+    new_otp = generate_otp()
+
 
     registration["otp"] = (
         new_otp
     )
+
 
     registration["expires_at"] = (
         datetime.utcnow()
@@ -952,15 +1149,18 @@ def resend_otp(
         )
     )
 
+
     send_otp_email(
         email,
         new_otp
     )
 
+
     return {
 
         "message":
             "New OTP sent successfully"
+
     }
 
 
@@ -985,6 +1185,7 @@ def login_user(
         .lower()
     )
 
+
     user = (
 
         db.query(
@@ -996,7 +1197,9 @@ def login_user(
         )
 
         .first()
+
     )
+
 
     if not user:
 
@@ -1004,6 +1207,7 @@ def login_user(
             status_code=401,
             detail="Invalid email or password"
         )
+
 
     if not verify_password(
         password,
@@ -1015,10 +1219,12 @@ def login_user(
             detail="Invalid email or password"
         )
 
+
     token = create_access_token(
         user.id,
         user.email
     )
+
 
     add_activity(
         db,
@@ -1027,6 +1233,7 @@ def login_user(
         None,
         "User logged in"
     )
+
 
     return {
 
@@ -1049,7 +1256,9 @@ def login_user(
 
             "email":
                 user.email
+
         }
+
     }
 
 
@@ -1075,9 +1284,11 @@ async def upload_file(
             detail="Invalid file"
         )
 
+
     extension = os.path.splitext(
         file.filename
     )[1]
+
 
     blob_name = (
         f"user_{user.id}/"
@@ -1087,15 +1298,18 @@ async def upload_file(
         extension
     )
 
+
     try:
 
         file_data = await file.read()
+
 
         blob_client = (
             container_client.get_blob_client(
                 blob_name
             )
         )
+
 
         blob_client.upload_blob(
 
@@ -1104,13 +1318,17 @@ async def upload_file(
             overwrite=False,
 
             content_settings=ContentSettings(
+
                 content_type=(
                     file.content_type
                     or
                     "application/octet-stream"
                 )
+
             )
+
         )
+
 
     except Exception as error:
 
@@ -1119,16 +1337,20 @@ async def upload_file(
             error
         )
 
+
         raise HTTPException(
             status_code=500,
             detail="Azure file upload failed"
         )
 
+
     finally:
 
         await file.close()
 
+
     now = current_time()
+
 
     record = models.FileRecord(
 
@@ -1159,13 +1381,15 @@ async def upload_file(
         uploaded_at=now,
 
         modified_at=now
+
     )
 
-    db.add(record)
 
-    db.commit()
+    db.add(record)
+        db.commit()
 
     db.refresh(record)
+
 
     add_activity(
         db,
@@ -1174,6 +1398,7 @@ async def upload_file(
         record.name,
         "File uploaded to Azure Blob Storage"
     )
+
 
     return {
 
@@ -1185,6 +1410,7 @@ async def upload_file(
 
         "file":
             file_to_dict(record)
+
     }
 
 
@@ -1218,13 +1444,16 @@ def get_files(
         )
 
         .all()
+
     )
+
 
     return [
 
         file_to_dict(record)
 
         for record in records
+
     ]
 
 
@@ -1255,13 +1484,16 @@ def starred_files(
         )
 
         .all()
+
     )
+
 
     return [
 
         file_to_dict(record)
 
         for record in records
+
     ]
 
 
@@ -1291,13 +1523,16 @@ def shared_files(
         )
 
         .all()
+
     )
+
 
     return [
 
         file_to_dict(record)
 
         for record in records
+
     ]
 
 
@@ -1327,13 +1562,16 @@ def locked_files(
         )
 
         .all()
+
     )
+
 
     return [
 
         file_to_dict(record)
 
         for record in records
+
     ]
 
 
@@ -1362,13 +1600,16 @@ def trash_files(
         )
 
         .all()
+
     )
+
 
     return [
 
         file_to_dict(record)
 
         for record in records
+
     ]
 
 
@@ -1396,7 +1637,9 @@ def download_file(
         )
 
         .first()
+
     )
+
 
     if not record:
 
@@ -1404,6 +1647,7 @@ def download_file(
             status_code=404,
             detail="File not found"
         )
+
 
     try:
 
@@ -1413,9 +1657,11 @@ def download_file(
             )
         )
 
+
         stream = (
             blob_client.download_blob()
         )
+
 
         return StreamingResponse(
 
@@ -1428,8 +1674,11 @@ def download_file(
 
                 "Content-Disposition":
                     f'attachment; filename="{record.name}"'
+
             }
+
         )
+
 
     except Exception as error:
 
@@ -1437,6 +1686,7 @@ def download_file(
             "DOWNLOAD ERROR:",
             error
         )
+
 
         raise HTTPException(
             status_code=404,
@@ -1468,7 +1718,9 @@ def preview_file(
         )
 
         .first()
+
     )
+
 
     if not record:
 
@@ -1476,6 +1728,7 @@ def preview_file(
             status_code=404,
             detail="File not found"
         )
+
 
     try:
 
@@ -1485,9 +1738,11 @@ def preview_file(
             )
         )
 
+
         stream = (
             blob_client.download_blob()
         )
+
 
         return StreamingResponse(
             stream.chunks(),
@@ -1495,12 +1750,14 @@ def preview_file(
                 record.content_type
         )
 
+
     except Exception as error:
 
         print(
             "PREVIEW ERROR:",
             error
         )
+
 
         raise HTTPException(
             status_code=404,
@@ -1531,6 +1788,7 @@ def rename_file(
         db
     )
 
+
     if not new_name.strip():
 
         raise HTTPException(
@@ -1538,21 +1796,26 @@ def rename_file(
             detail="File name cannot be empty"
         )
 
+
     old_name = (
         record.name
     )
+
 
     record.name = (
         new_name.strip()
     )
 
+
     record.modified_at = (
         current_time()
     )
 
+
     db.commit()
 
     db.refresh(record)
+
 
     add_activity(
         db,
@@ -1562,6 +1825,7 @@ def rename_file(
         f"File renamed from {old_name} to {record.name}"
     )
 
+
     return {
 
         "message":
@@ -1569,6 +1833,7 @@ def rename_file(
 
         "file":
             file_to_dict(record)
+
     }
 
 
@@ -1593,15 +1858,19 @@ def star_file(
         db
     )
 
+
     record.starred = (
         not record.starred
     )
+
 
     record.modified_at = (
         current_time()
     )
 
+
     db.commit()
+
 
     add_activity(
 
@@ -1624,7 +1893,9 @@ def star_file(
             else
             "File removed from Starred"
         )
+
     )
+
 
     return {
 
@@ -1633,6 +1904,7 @@ def star_file(
 
         "starred":
             record.starred
+
     }
 
 
@@ -1657,13 +1929,17 @@ def lock_file(
         db
     )
 
+
     record.locked = True
+
 
     record.modified_at = (
         current_time()
     )
 
+
     db.commit()
+
 
     add_activity(
         db,
@@ -1673,10 +1949,12 @@ def lock_file(
         "File moved to Private Vault"
     )
 
+
     return {
 
         "message":
             "File moved to Locked Folder"
+
     }
 
 
@@ -1701,13 +1979,17 @@ def unlock_file(
         db
     )
 
+
     record.locked = False
+
 
     record.modified_at = (
         current_time()
     )
 
+
     db.commit()
+
 
     add_activity(
         db,
@@ -1717,10 +1999,12 @@ def unlock_file(
         "File moved back to My Drive"
     )
 
+
     return {
 
         "message":
             "File moved to My Drive"
+
     }
 
 
@@ -1745,13 +2029,17 @@ def move_to_trash(
         db
     )
 
+
     record.trashed = True
+
 
     record.modified_at = (
         current_time()
     )
 
+
     db.commit()
+
 
     add_activity(
         db,
@@ -1761,10 +2049,12 @@ def move_to_trash(
         "File moved to Trash"
     )
 
+
     return {
 
         "message":
             "File moved to Trash"
+
     }
 
 
@@ -1789,13 +2079,17 @@ def restore_file(
         db
     )
 
+
     record.trashed = False
+
 
     record.modified_at = (
         current_time()
     )
 
+
     db.commit()
+
 
     add_activity(
         db,
@@ -1805,10 +2099,12 @@ def restore_file(
         "File restored from Trash"
     )
 
+
     return {
 
         "message":
             "File restored"
+
     }
 
 
@@ -1833,9 +2129,11 @@ def delete_file(
         db
     )
 
+
     deleted_file_name = (
         record.name
     )
+
 
     try:
 
@@ -1845,7 +2143,9 @@ def delete_file(
             )
         )
 
+
         blob_client.delete_blob()
+
 
     except Exception as error:
 
@@ -1854,9 +2154,11 @@ def delete_file(
             error
         )
 
+
     db.delete(record)
 
     db.commit()
+
 
     add_activity(
         db,
@@ -1866,10 +2168,12 @@ def delete_file(
         "File permanently deleted from Azure"
     )
 
+
     return {
 
         "message":
             "File permanently deleted from Azure"
+
     }
 
 
@@ -1900,11 +2204,13 @@ def share_file(
         db
     )
 
+
     email = (
         email
         .strip()
         .lower()
     )
+
 
     if (
         not email
@@ -1917,6 +2223,7 @@ def share_file(
             detail="Invalid email"
         )
 
+
     try:
 
         people = json.loads(
@@ -1925,11 +2232,14 @@ def share_file(
             "[]"
         )
 
+
     except json.JSONDecodeError:
 
         people = []
 
+
     found = False
+
 
     for person in people:
 
@@ -1945,6 +2255,7 @@ def share_file(
 
             found = True
 
+
     if not found:
 
         people.append(
@@ -1955,20 +2266,26 @@ def share_file(
 
                 "permission":
                     permission
+
             }
         )
 
+
     record.shared = True
+
 
     record.shared_with = (
         json.dumps(people)
     )
 
+
     record.modified_at = (
         current_time()
     )
 
+
     db.commit()
+
 
     add_activity(
         db,
@@ -1978,6 +2295,7 @@ def share_file(
         f"File shared with {email} as {permission}"
     )
 
+
     return {
 
         "message":
@@ -1985,6 +2303,7 @@ def share_file(
 
         "shared_with":
             people
+
     }
 
 
@@ -2005,12 +2324,14 @@ def create_folder(
 
     name = name.strip()
 
+
     if not name:
 
         raise HTTPException(
             status_code=400,
             detail="Folder name required"
         )
+
 
     folder = models.FolderRecord(
 
@@ -2023,13 +2344,16 @@ def create_folder(
         trashed=False,
 
         created_at=current_time()
+
     )
+
 
     db.add(folder)
 
     db.commit()
 
     db.refresh(folder)
+
 
     add_activity(
         db,
@@ -2038,6 +2362,7 @@ def create_folder(
         folder.name,
         "New folder created"
     )
+
 
     return {
 
@@ -2057,7 +2382,9 @@ def create_folder(
 
             "created_at":
                 folder.created_at
+
         }
+
     }
 
 
@@ -2086,7 +2413,9 @@ def get_folders(
         )
 
         .all()
+
     )
+
 
     return [
 
@@ -2106,9 +2435,11 @@ def get_folders(
 
             "created_at":
                 folder.created_at
+
         }
 
         for folder in folders
+
     ]
 
 
@@ -2141,7 +2472,9 @@ def rename_folder(
         )
 
         .first()
+
     )
+
 
     if not folder:
 
@@ -2150,6 +2483,7 @@ def rename_folder(
             detail="Folder not found"
         )
 
+
     if not new_name.strip():
 
         raise HTTPException(
@@ -2157,15 +2491,19 @@ def rename_folder(
             detail="Folder name cannot be empty"
         )
 
+
     old_folder_name = (
         folder.name
     )
+
 
     folder.name = (
         new_name.strip()
     )
 
+
     db.commit()
+
 
     add_activity(
         db,
@@ -2175,10 +2513,12 @@ def rename_folder(
         f"Folder renamed from {old_folder_name} to {folder.name}"
     )
 
+
     return {
 
         "message":
             "Folder renamed"
+
     }
 
 
@@ -2209,7 +2549,9 @@ def delete_folder(
         )
 
         .first()
+
     )
+
 
     if not folder:
 
@@ -2218,13 +2560,16 @@ def delete_folder(
             detail="Folder not found"
         )
 
+
     deleted_folder_name = (
         folder.name
     )
 
+
     db.delete(folder)
 
     db.commit()
+
 
     add_activity(
         db,
@@ -2234,10 +2579,12 @@ def delete_folder(
         "Folder deleted"
     )
 
+
     return {
 
         "message":
             "Folder deleted"
+
     }
 
 
@@ -2265,20 +2612,25 @@ def storage(
         )
 
         .all()
+
     )
+
 
     total_bytes = sum(
 
         record.size or 0
 
         for record in records
+
     )
+
 
     used_mb = (
         total_bytes /
         1024 /
         1024
     )
+
 
     used_gb = (
         total_bytes /
@@ -2287,13 +2639,16 @@ def storage(
         1024
     )
 
+
     limit_gb = 15
+
 
     percentage = (
         used_gb /
         limit_gb *
         100
     )
+
 
     return {
 
@@ -2326,6 +2681,7 @@ def storage(
 
         "storage_provider":
             "Microsoft Azure Blob Storage"
+
     }
 
 
@@ -2361,7 +2717,9 @@ def get_activity(
         .limit(50)
 
         .all()
+
     )
+
 
     return [
 
@@ -2381,7 +2739,9 @@ def get_activity(
 
             "created_at":
                 log.created_at
+
         }
 
         for log in logs
+
     ]
