@@ -1330,3 +1330,62 @@ section {
         display: none;
     }
 }
+.developer-footer {
+    position: fixed;
+    bottom: 12px;
+    right: 16px;
+
+    padding: 8px 14px;
+
+    background: rgba(255,255,255,0.9);
+    color: #334155;
+
+    border: 1px solid #e2e8f0;
+    border-radius: 999px;
+
+    font-size: 13px;
+    font-weight: 500;
+
+    box-shadow: 0 6px 18px rgba(15,23,42,0.08);
+    backdrop-filter: blur(8px);
+
+    z-index: 9999;
+}
+
+.developer-footer strong {
+    color: #2563eb;
+}
+/* =========================================
+   DEVELOPER SIGNATURE
+========================================= */
+
+.developer-footer {
+    position: fixed;
+    right: 18px;
+    bottom: 15px;
+    z-index: 9999;
+
+    padding: 9px 16px;
+
+    background: rgba(255, 255, 255, 0.92);
+    color: #475569;
+
+    border: 1px solid #e2e8f0;
+    border-radius: 50px;
+
+    font-size: 13px;
+    font-weight: 500;
+
+    box-shadow: 0 8px 25px rgba(15, 23, 42, 0.12);
+    backdrop-filter: blur(10px);
+}
+
+.developer-footer i {
+    margin-right: 6px;
+    color: #2563eb;
+}
+
+.developer-footer strong {
+    color: #2563eb;
+    font-weight: 700;
+}
