@@ -273,7 +273,8 @@ authForm.addEventListener(
         const email =
             emailInput
                 .value
-                .trim();
+                .trim()
+                .toLowerCase();
 
 
         const password =
@@ -417,6 +418,15 @@ async function registerUser(
             !response.ok
         ) {
 
+            /*
+            Backend duplicate-email protection returns
+            its message through data.detail.
+
+            Example:
+            "An account already exists with this email.
+             Please login."
+            */
+
             throw new Error(
                 data.detail ||
                 "Registration failed"
@@ -480,12 +490,18 @@ function showOtpScreen() {
         "";
 
 
-    otpMessage.textContent =
-        "";
-
+    /*
+    IMPORTANT:
+    This appears immediately after the FIRST OTP.
+    The user does NOT need to press Resend OTP.
+    */
 
     otpMessage.className =
-        "message";
+        "message success";
+
+
+    otpMessage.innerHTML =
+        'OTP sent successfully. Please check your Inbox. If you do not see it, check your <strong>Spam or Junk folder</strong>.';
 
 
     setTimeout(
@@ -702,6 +718,10 @@ async function verifyOtp() {
 
 
 // ============================================================
+// END OF PART 1
+// PASTE PART 2 DIRECTLY BELOW THIS LINE
+// ============================================================
+// ============================================================
 // RESEND OTP
 // ============================================================
 
@@ -775,8 +795,8 @@ resendOtpBtn.addEventListener(
                 "message success";
 
 
-            otpMessage.textContent =
-                "New OTP sent successfully.";
+            otpMessage.innerHTML =
+                'New OTP sent successfully. Please check your Inbox. If you do not see it, check your <strong>Spam or Junk folder</strong>.';
 
 
         } catch (
@@ -817,6 +837,22 @@ backBtn.addEventListener(
 
         authSection.style.display =
             "block";
+
+
+        pendingEmail =
+            null;
+
+
+        otpInput.value =
+            "";
+
+
+        otpMessage.textContent =
+            "";
+
+
+        otpMessage.className =
+            "message";
 
 
         registerTab.click();
@@ -934,6 +970,10 @@ async function loginUser(
         }
 
 
+        // ====================================================
+        // SAVE LOGIN SESSION
+        // ====================================================
+
         localStorage.setItem(
             "cloudvault_token",
             data.access_token
@@ -1034,3 +1074,8 @@ function clearMessage() {
         "";
 
 }
+
+
+// ============================================================
+// CLOUDVAULT AUTH.JS END
+// ============================================================

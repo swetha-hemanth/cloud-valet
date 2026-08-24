@@ -366,6 +366,17 @@
                 </div>
 
 
+                <button
+                    class="icon-btn"
+                    id="logoutBtn"
+                    type="button"
+                    title="Logout"
+                    aria-label="Logout"
+                >
+                    <i class="fa-solid fa-right-from-bracket"></i>
+                </button>
+
+
             </div>
 
 
@@ -1276,6 +1287,24 @@
     <span id="toastText"></span>
 
 </div>
+
+
+<!-- =========================================================
+     LOGOUT
+========================================================= -->
+
+<script>
+    const logoutBtn = document.getElementById("logoutBtn");
+
+    if (logoutBtn) {
+        logoutBtn.addEventListener("click", function () {
+            localStorage.removeItem("cloudvault_token");
+            localStorage.removeItem("cloudvault_user");
+
+            window.location.href = "login.html";
+        });
+    }
+</script>
 
 
 <!-- IMPORTANT: APP.JS MUST APPEAR ONLY ONCE -->
