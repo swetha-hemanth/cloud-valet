@@ -2,7 +2,6 @@
 <html lang="en">
 
 <head>
-
     <meta charset="UTF-8">
 
     <meta
@@ -10,9 +9,7 @@
         content="width=device-width, initial-scale=1.0"
     >
 
-    <title>
-        CloudVault - Login
-    </title>
+    <title>CloudVault - Login</title>
 
     <link
         rel="stylesheet"
@@ -30,18 +27,15 @@
 
         body {
             min-height: 100vh;
-
-            background:
-                linear-gradient(
-                    135deg,
-                    #eef4ff,
-                    #f8faff
-                );
+            background: linear-gradient(
+                135deg,
+                #eef4ff,
+                #f8faff
+            );
 
             display: flex;
             justify-content: center;
             align-items: center;
-
             padding: 20px;
         }
 
@@ -51,32 +45,30 @@
             min-height: 590px;
 
             background: white;
-
             border-radius: 25px;
-
             overflow: hidden;
 
             display: grid;
-
-            grid-template-columns:
-                1fr 1fr;
+            grid-template-columns: 1fr 1fr;
 
             box-shadow:
                 0 25px 60px
                 rgba(30, 64, 175, 0.15);
         }
 
+        /* ========================= */
+        /* LEFT SIDE                 */
+        /* ========================= */
+
         .left {
             padding: 60px;
-
             color: white;
 
-            background:
-                linear-gradient(
-                    135deg,
-                    #2563eb,
-                    #4f46e5
-                );
+            background: linear-gradient(
+                135deg,
+                #2563eb,
+                #4f46e5
+            );
 
             display: flex;
             flex-direction: column;
@@ -97,7 +89,6 @@
             justify-content: center;
 
             font-size: 35px;
-
             margin-bottom: 28px;
         }
 
@@ -124,6 +115,10 @@
             gap: 12px;
         }
 
+        /* ========================= */
+        /* RIGHT SIDE                */
+        /* ========================= */
+
         .right {
             padding: 50px;
         }
@@ -140,15 +135,17 @@
             line-height: 1.5;
         }
 
+        /* ========================= */
+        /* TABS                      */
+        /* ========================= */
+
         .tabs {
             display: flex;
 
             background: #f1f5f9;
 
             border-radius: 12px;
-
             padding: 5px;
-
             margin-bottom: 28px;
         }
 
@@ -156,13 +153,10 @@
             width: 50%;
 
             border: none;
-
             padding: 13px;
-
             border-radius: 9px;
 
             cursor: pointer;
-
             background: transparent;
 
             font-weight: 600;
@@ -178,17 +172,19 @@
                 rgba(0,0,0,0.08);
         }
 
+        /* ========================= */
+        /* FORM                      */
+        /* ========================= */
+
         .form-group {
             margin-bottom: 18px;
         }
 
         .form-group label {
             display: block;
-
             margin-bottom: 8px;
 
             font-weight: 600;
-
             color: #334155;
         }
 
@@ -196,47 +192,125 @@
             position: relative;
         }
 
-        .input-box i {
+        .input-icon {
             position: absolute;
 
             left: 15px;
-
             top: 50%;
 
-            transform:
-                translateY(-50%);
+            transform: translateY(-50%);
 
             color: #94a3b8;
+
+            pointer-events: none;
+
+            z-index: 2;
         }
 
         .input-box input {
             width: 100%;
 
-            padding:
-                14px
-                45px;
+            padding: 14px 45px;
 
-            border:
-                1px solid #dbe3ef;
+            border: 1px solid #dbe3ef;
+            border-radius: 11px;
 
-            border-radius:
-                11px;
+            outline: none;
 
-            outline:
-                none;
+            font-size: 15px;
 
-            font-size:
-                15px;
+            transition: 0.2s;
         }
 
         .input-box input:focus {
-            border-color:
-                #3b82f6;
+            border-color: #3b82f6;
 
             box-shadow:
                 0 0 0 3px
                 rgba(59,130,246,0.08);
         }
+
+        /* ========================= */
+        /* PASSWORD EYE              */
+        /* ========================= */
+
+        .password-box input {
+            padding-right: 55px;
+        }
+
+        .password-toggle {
+            position: absolute;
+
+            right: 10px;
+            top: 50%;
+
+            transform: translateY(-50%);
+
+            width: 40px;
+            height: 40px;
+
+            border: none;
+            background: transparent;
+
+            cursor: pointer;
+
+            color: #64748b;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 50%;
+
+            z-index: 5;
+        }
+
+        .password-toggle:hover {
+            color: #2563eb;
+            background: #eff6ff;
+        }
+
+        .password-toggle i {
+            position: static;
+            transform: none;
+            color: inherit;
+            pointer-events: none;
+        }
+
+        /* ========================= */
+        /* REGISTER EMAIL NOTICE     */
+        /* ========================= */
+
+        .register-email-notice {
+            display: none;
+
+            margin-top: -3px;
+            margin-bottom: 20px;
+
+            padding: 14px 15px;
+
+            border-radius: 11px;
+
+            background: #fff7ed;
+            border: 1px solid #fed7aa;
+
+            color: #9a3412;
+
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .register-email-notice i {
+            margin-right: 6px;
+        }
+
+        .register-email-notice strong {
+            color: #7c2d12;
+        }
+
+        /* ========================= */
+        /* BUTTON                    */
+        /* ========================= */
 
         .submit-btn {
             width: 100%;
@@ -244,35 +318,36 @@
             padding: 15px;
 
             border: none;
-
-            border-radius:
-                11px;
+            border-radius: 11px;
 
             color: white;
 
-            background:
-                linear-gradient(
-                    90deg,
-                    #2563eb,
-                    #4f46e5
-                );
+            background: linear-gradient(
+                90deg,
+                #2563eb,
+                #4f46e5
+            );
 
-            font-size:
-                16px;
+            font-size: 16px;
+            font-weight: 700;
 
-            font-weight:
-                700;
-
-            cursor:
-                pointer;
+            cursor: pointer;
 
             margin-top: 7px;
+        }
+
+        .submit-btn:hover {
+            opacity: 0.94;
         }
 
         .submit-btn:disabled {
             opacity: 0.6;
             cursor: not-allowed;
         }
+
+        /* ========================= */
+        /* MESSAGES                  */
+        /* ========================= */
 
         .message {
             min-height: 24px;
@@ -282,7 +357,6 @@
             margin-top: 17px;
 
             font-size: 14px;
-
             line-height: 1.5;
         }
 
@@ -298,7 +372,9 @@
             display: none;
         }
 
-        /* OTP AREA */
+        /* ========================= */
+        /* OTP                       */
+        /* ========================= */
 
         #otpSection {
             display: none;
@@ -314,16 +390,13 @@
 
             border-radius: 50%;
 
-            margin:
-                0 auto
-                20px;
+            margin: 0 auto 20px;
 
             display: flex;
             align-items: center;
             justify-content: center;
 
             color: #2563eb;
-
             background: #eff6ff;
 
             font-size: 30px;
@@ -339,20 +412,55 @@
             margin-top: 5px;
         }
 
+        /* ========================= */
+        /* FIRST OTP SPAM WARNING    */
+        /* ========================= */
+
+        .otp-notice {
+            margin-top: 20px;
+            margin-bottom: 5px;
+
+            padding: 15px;
+
+            border-radius: 12px;
+
+            background: #fff7ed;
+
+            border: 1px solid #fdba74;
+
+            color: #9a3412;
+
+            font-size: 14px;
+            line-height: 1.6;
+
+            text-align: left;
+        }
+
+        .otp-notice-title {
+            display: flex;
+            align-items: center;
+
+            gap: 8px;
+
+            font-weight: 700;
+
+            color: #7c2d12;
+
+            margin-bottom: 5px;
+        }
+
         .otp-input {
             width: 100%;
 
-            margin-top: 25px;
+            margin-top: 20px;
 
             padding: 17px;
 
-            border:
-                1px solid #dbe3ef;
+            border: 1px solid #dbe3ef;
 
             border-radius: 12px;
 
             font-size: 27px;
-
             font-weight: 700;
 
             text-align: center;
@@ -383,7 +491,6 @@
 
         .link-btn {
             border: none;
-
             background: transparent;
 
             color: #2563eb;
@@ -391,7 +498,6 @@
             cursor: pointer;
 
             font-size: 14px;
-
             font-weight: 600;
         }
 
@@ -405,17 +511,17 @@
             color: #64748b;
 
             font-size: 13px;
-
             line-height: 1.5;
         }
 
-        @media (
-            max-width: 750px
-        ) {
+        /* ========================= */
+        /* MOBILE                    */
+        /* ========================= */
+
+        @media (max-width: 750px) {
 
             .container {
-                grid-template-columns:
-                    1fr;
+                grid-template-columns: 1fr;
             }
 
             .left {
@@ -425,6 +531,7 @@
             .right {
                 padding: 35px 25px;
             }
+
         }
 
     </style>
@@ -438,7 +545,9 @@
 <div class="container">
 
 
-    <!-- LEFT SIDE -->
+    <!-- ============================= -->
+    <!-- LEFT                          -->
+    <!-- ============================= -->
 
     <div class="left">
 
@@ -461,6 +570,7 @@
 
 
         <div class="features">
+
 
             <div class="feature">
 
@@ -506,17 +616,22 @@
 
             </div>
 
+
         </div>
 
     </div>
 
 
-    <!-- RIGHT SIDE -->
+    <!-- ============================= -->
+    <!-- RIGHT                         -->
+    <!-- ============================= -->
 
     <div class="right">
 
 
-        <!-- LOGIN / REGISTER AREA -->
+        <!-- ========================= -->
+        <!-- LOGIN / REGISTER          -->
+        <!-- ========================= -->
 
         <div id="authSection">
 
@@ -530,13 +645,14 @@
                 class="subtitle"
                 id="formSubtitle"
             >
-
                 Login to your CloudVault account.
-
             </p>
 
 
+            <!-- TABS -->
+
             <div class="tabs">
+
 
                 <button
                     type="button"
@@ -555,30 +671,37 @@
                     Register
                 </button>
 
+
             </div>
 
 
             <form id="authForm">
 
 
+                <!-- NAME -->
+
                 <div
                     class="form-group"
                     id="nameGroup"
                 >
 
-                    <label>
+                    <label for="name">
                         Full Name
                     </label>
 
 
                     <div class="input-box">
 
-                        <i class="fa-solid fa-user"></i>
+                        <i
+                            class="fa-solid fa-user input-icon"
+                        ></i>
+
 
                         <input
                             type="text"
                             id="name"
-                            placeholder="Enter your name"
+                            placeholder="Enter your full name"
+                            autocomplete="name"
                         >
 
                     </div>
@@ -586,21 +709,27 @@
                 </div>
 
 
+                <!-- EMAIL -->
+
                 <div class="form-group">
 
-                    <label>
+                    <label for="email">
                         Email Address
                     </label>
 
 
                     <div class="input-box">
 
-                        <i class="fa-solid fa-envelope"></i>
+                        <i
+                            class="fa-solid fa-envelope input-icon"
+                        ></i>
+
 
                         <input
                             type="email"
                             id="email"
                             placeholder="Enter your email"
+                            autocomplete="email"
                             required
                         >
 
@@ -609,28 +738,81 @@
                 </div>
 
 
+                <!-- ================================= -->
+                <!-- REGISTER NOTICE - BEFORE OTP      -->
+                <!-- ================================= -->
+
+                <div
+                    class="register-email-notice"
+                    id="registerEmailNotice"
+                >
+
+                    <i class="fa-solid fa-envelope-circle-check"></i>
+
+                    <strong>Email verification:</strong>
+
+                    We will send a 6-digit OTP to your email.
+
+                    Please check your
+                    <strong>Inbox</strong>
+                    and also your
+                    <strong>Spam / Junk folder</strong>
+                    for the verification code.
+
+                </div>
+
+
+                <!-- PASSWORD -->
+
                 <div class="form-group">
 
-                    <label>
+                    <label for="password">
                         Password
                     </label>
 
 
-                    <div class="input-box">
+                    <div class="input-box password-box">
 
-                        <i class="fa-solid fa-lock"></i>
+
+                        <i
+                            class="fa-solid fa-lock input-icon"
+                        ></i>
+
 
                         <input
                             type="password"
                             id="password"
                             placeholder="Minimum 6 characters"
+                            autocomplete="current-password"
+                            minlength="6"
                             required
                         >
+
+
+                        <!-- EYE -->
+
+                        <button
+                            type="button"
+                            class="password-toggle"
+                            id="togglePassword"
+                            aria-label="Show password"
+                            title="Show password"
+                        >
+
+                            <i
+                                class="fa-solid fa-eye"
+                                id="passwordEyeIcon"
+                            ></i>
+
+                        </button>
+
 
                     </div>
 
                 </div>
 
+
+                <!-- SUBMIT -->
 
                 <button
                     type="submit"
@@ -653,7 +835,9 @@
         </div>
 
 
-        <!-- OTP VERIFICATION AREA -->
+        <!-- ========================= -->
+        <!-- OTP                       -->
+        <!-- ========================= -->
 
         <div id="otpSection">
 
@@ -663,7 +847,9 @@
 
                 <div class="otp-icon">
 
-                    <i class="fa-solid fa-envelope-circle-check"></i>
+                    <i
+                        class="fa-solid fa-envelope-circle-check"
+                    ></i>
 
                 </div>
 
@@ -674,16 +860,50 @@
 
 
                 <p class="subtitle">
-
                     We sent a 6-digit verification code to
-
-                    <div
-                        class="otp-email"
-                        id="otpEmailText"
-                    ></div>
-
                 </p>
 
+
+                <div
+                    class="otp-email"
+                    id="otpEmailText"
+                ></div>
+
+
+                <!-- ================================= -->
+                <!-- VISIBLE FROM FIRST OTP            -->
+                <!-- ================================= -->
+
+                <div class="otp-notice">
+
+
+                    <div class="otp-notice-title">
+
+                        <i class="fa-solid fa-circle-info"></i>
+
+                        OTP sent successfully!
+
+                    </div>
+
+
+                    <div>
+
+                        Please check your
+                        <strong>Inbox</strong>.
+
+                        <br>
+
+                        If you cannot find the OTP email,
+                        please check your
+                        <strong>Spam or Junk folder.</strong>
+
+                    </div>
+
+
+                </div>
+
+
+                <!-- OTP INPUT -->
 
                 <input
                     type="text"
@@ -695,6 +915,8 @@
                     placeholder="000000"
                 >
 
+
+                <!-- VERIFY -->
 
                 <button
                     type="button"
@@ -713,6 +935,8 @@
                 ></p>
 
 
+                <!-- ACTIONS -->
+
                 <div class="otp-actions">
 
 
@@ -722,7 +946,9 @@
                         id="backBtn"
                     >
 
-                        <i class="fa-solid fa-arrow-left"></i>
+                        <i
+                            class="fa-solid fa-arrow-left"
+                        ></i>
 
                         Back
 
@@ -745,7 +971,8 @@
 
                 <p class="verification-note">
 
-                    The verification code expires in 10 minutes.
+                    The verification code expires in
+                    10 minutes.
 
                 </p>
 
@@ -762,7 +989,165 @@
 </div>
 
 
+<!-- ================================= -->
+<!-- YOUR EXISTING AUTH.JS             -->
+<!-- ================================= -->
+
 <script src="js/auth.js"></script>
+
+
+<!-- ================================= -->
+<!-- PAGE UI JAVASCRIPT                -->
+<!-- ================================= -->
+
+<script>
+
+    /*
+    ============================================================
+    PASSWORD SHOW / HIDE
+    ============================================================
+    */
+
+    const togglePassword =
+        document.getElementById(
+            "togglePassword"
+        );
+
+
+    const passwordField =
+        document.getElementById(
+            "password"
+        );
+
+
+    const passwordEyeIcon =
+        document.getElementById(
+            "passwordEyeIcon"
+        );
+
+
+    togglePassword.addEventListener(
+        "click",
+        function () {
+
+
+            if (
+                passwordField.type ===
+                "password"
+            ) {
+
+
+                passwordField.type =
+                    "text";
+
+
+                passwordEyeIcon
+                    .classList
+                    .remove(
+                        "fa-eye"
+                    );
+
+
+                passwordEyeIcon
+                    .classList
+                    .add(
+                        "fa-eye-slash"
+                    );
+
+
+                togglePassword.setAttribute(
+                    "aria-label",
+                    "Hide password"
+                );
+
+
+                togglePassword.title =
+                    "Hide password";
+
+
+            } else {
+
+
+                passwordField.type =
+                    "password";
+
+
+                passwordEyeIcon
+                    .classList
+                    .remove(
+                        "fa-eye-slash"
+                    );
+
+
+                passwordEyeIcon
+                    .classList
+                    .add(
+                        "fa-eye"
+                    );
+
+
+                togglePassword.setAttribute(
+                    "aria-label",
+                    "Show password"
+                );
+
+
+                togglePassword.title =
+                    "Show password";
+
+            }
+
+        }
+    );
+
+
+    /*
+    ============================================================
+    SHOW SPAM/JUNK NOTICE ON REGISTER TAB
+    ============================================================
+    */
+
+    const registerTabNotice =
+        document.getElementById(
+            "registerEmailNotice"
+        );
+
+
+    const registerTabButton =
+        document.getElementById(
+            "registerTab"
+        );
+
+
+    const loginTabButton =
+        document.getElementById(
+            "loginTab"
+        );
+
+
+    registerTabButton.addEventListener(
+        "click",
+        function () {
+
+            registerTabNotice.style.display =
+                "block";
+
+        }
+    );
+
+
+    loginTabButton.addEventListener(
+        "click",
+        function () {
+
+            registerTabNotice.style.display =
+                "none";
+
+        }
+    );
+
+
+</script>
 
 
 </body>
