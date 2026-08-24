@@ -929,8 +929,8 @@ def register_user(
     if existing:
 
         raise HTTPException(
-            status_code=400,
-            detail="Email already registered"
+            status_code=409,
+            detail="An account already exists with this email. Please login."
         )
 
 
@@ -1037,8 +1037,8 @@ def verify_registration(
 
 
         raise HTTPException(
-            status_code=400,
-            detail="Email already registered"
+            status_code=409,
+            detail="An account already exists with this email. Please login."
         )
 
 

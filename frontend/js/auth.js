@@ -4,15 +4,21 @@
 // ============================================================
 
 
-const API_URL = "https://cloud-valet.onrender.com";
+// ============================================================
+// BACKEND API
+// ============================================================
+
+const API_URL =
+    "https://cloud-valet.onrender.com";
 
 
-let mode =
-    "login";
+// ============================================================
+// STATE
+// ============================================================
 
+let mode = "login";
 
-let pendingEmail =
-    null;
+let pendingEmail = null;
 
 
 // ============================================================
@@ -20,128 +26,71 @@ let pendingEmail =
 // ============================================================
 
 const loginTab =
-    document.getElementById(
-        "loginTab"
-    );
-
+    document.getElementById("loginTab");
 
 const registerTab =
-    document.getElementById(
-        "registerTab"
-    );
-
+    document.getElementById("registerTab");
 
 const authForm =
-    document.getElementById(
-        "authForm"
-    );
-
+    document.getElementById("authForm");
 
 const nameGroup =
-    document.getElementById(
-        "nameGroup"
-    );
-
+    document.getElementById("nameGroup");
 
 const nameInput =
-    document.getElementById(
-        "name"
-    );
-
+    document.getElementById("name");
 
 const emailInput =
-    document.getElementById(
-        "email"
-    );
-
+    document.getElementById("email");
 
 const passwordInput =
-    document.getElementById(
-        "password"
-    );
-
+    document.getElementById("password");
 
 const formTitle =
-    document.getElementById(
-        "formTitle"
-    );
-
+    document.getElementById("formTitle");
 
 const formSubtitle =
-    document.getElementById(
-        "formSubtitle"
-    );
-
+    document.getElementById("formSubtitle");
 
 const submitBtn =
-    document.getElementById(
-        "submitBtn"
-    );
-
+    document.getElementById("submitBtn");
 
 const message =
-    document.getElementById(
-        "message"
-    );
-
+    document.getElementById("message");
 
 const authSection =
-    document.getElementById(
-        "authSection"
-    );
-
+    document.getElementById("authSection");
 
 const otpSection =
-    document.getElementById(
-        "otpSection"
-    );
-
+    document.getElementById("otpSection");
 
 const otpInput =
-    document.getElementById(
-        "otpInput"
-    );
-
+    document.getElementById("otpInput");
 
 const otpEmailText =
-    document.getElementById(
-        "otpEmailText"
-    );
-
+    document.getElementById("otpEmailText");
 
 const verifyOtpBtn =
-    document.getElementById(
-        "verifyOtpBtn"
-    );
-
+    document.getElementById("verifyOtpBtn");
 
 const resendOtpBtn =
-    document.getElementById(
-        "resendOtpBtn"
-    );
-
+    document.getElementById("resendOtpBtn");
 
 const otpMessage =
-    document.getElementById(
-        "otpMessage"
-    );
-
+    document.getElementById("otpMessage");
 
 const backBtn =
-    document.getElementById(
-        "backBtn"
-    );
+    document.getElementById("backBtn");
 
 
 // ============================================================
-// IF ALREADY LOGGED IN
+// IF USER IS ALREADY LOGGED IN
 // ============================================================
 
 const existingToken =
     localStorage.getItem(
         "cloudvault_token"
     );
-
 
 const existingUser =
     localStorage.getItem(
@@ -168,39 +117,32 @@ loginTab.addEventListener(
     "click",
     () => {
 
-        mode =
-            "login";
-
+        mode = "login";
 
         loginTab
             .classList
-            .add(
-                "active"
-            );
-
+            .add("active");
 
         registerTab
             .classList
-            .remove(
-                "active"
-            );
-
+            .remove("active");
 
         nameGroup.style.display =
             "none";
 
-
         formTitle.textContent =
             "Welcome Back";
-
 
         formSubtitle.textContent =
             "Login to your CloudVault account.";
 
-
         submitBtn.textContent =
             "Login";
 
+        passwordInput.setAttribute(
+            "autocomplete",
+            "current-password"
+        );
 
         clearMessage();
 
@@ -216,39 +158,32 @@ registerTab.addEventListener(
     "click",
     () => {
 
-        mode =
-            "register";
-
+        mode = "register";
 
         registerTab
             .classList
-            .add(
-                "active"
-            );
-
+            .add("active");
 
         loginTab
             .classList
-            .remove(
-                "active"
-            );
-
+            .remove("active");
 
         nameGroup.style.display =
             "block";
 
-
         formTitle.textContent =
             "Create Account";
-
 
         formSubtitle.textContent =
             "Create your CloudVault account and verify your email.";
 
-
         submitBtn.textContent =
             "Create Account";
 
+        passwordInput.setAttribute(
+            "autocomplete",
+            "new-password"
+        );
 
         clearMessage();
 
@@ -266,27 +201,39 @@ authForm.addEventListener(
 
         event.preventDefault();
 
-
         clearMessage();
 
 
         const email =
             emailInput
                 .value
-                .trim();
+                .trim()
+                .toLowerCase();
 
 
         const password =
-            passwordInput
-                .value;
+            passwordInput.value;
 
 
-        if (
-            !email
-        ) {
+        // EMAIL CHECK
+
+        if (!email) {
 
             showError(
                 "Please enter your email."
+            );
+
+            return;
+
+        }
+
+
+        // PASSWORD CHECK
+
+        if (!password) {
+
+            showError(
+                "Please enter your password."
             );
 
             return;
@@ -307,9 +254,10 @@ authForm.addEventListener(
         }
 
 
+        // REGISTER
+
         if (
-            mode ===
-            "register"
+            mode === "register"
         ) {
 
             const name =
@@ -335,8 +283,11 @@ authForm.addEventListener(
                 password
             );
 
+        }
 
-        } else {
+        // LOGIN
+
+        else {
 
             await loginUser(
                 email,
@@ -366,11 +317,8 @@ async function registerUser(
 
 
         submitBtn.innerHTML = `
-
             <i class="fa-solid fa-spinner fa-spin"></i>
-
             Sending OTP...
-
         `;
 
 
@@ -400,17 +348,16 @@ async function registerUser(
             await fetch(
                 `${API_URL}/register`,
                 {
-                    method:
-                        "POST",
-
-                    body:
-                        formData
+                    method: "POST",
+                    body: formData
                 }
             );
 
 
         const data =
-            await response.json();
+            await readJsonResponse(
+                response
+            );
 
 
         if (
@@ -419,7 +366,7 @@ async function registerUser(
 
             throw new Error(
                 data.detail ||
-                "Registration failed"
+                "Registration failed."
             );
 
         }
@@ -427,18 +374,17 @@ async function registerUser(
 
         pendingEmail =
             data.email ||
-            email.toLowerCase();
+            email;
 
 
         showOtpScreen();
 
 
-    } catch (
-        error
-    ) {
+    } catch (error) {
 
         showError(
-            error.message
+            error.message ||
+            "Unable to register. Please try again."
         );
 
 
@@ -480,12 +426,16 @@ function showOtpScreen() {
         "";
 
 
-    otpMessage.textContent =
-        "";
-
-
     otpMessage.className =
-        "message";
+        "message success";
+
+
+    otpMessage.innerHTML = `
+        OTP sent successfully.<br>
+        Please check your Inbox.
+        If you don't see the email,
+        check your <strong>Spam or Junk folder</strong>.
+    `;
 
 
     setTimeout(
@@ -501,40 +451,16 @@ function showOtpScreen() {
 
 
 // ============================================================
-// VERIFY OTP
+// OTP INPUT
 // ============================================================
-
-verifyOtpBtn.addEventListener(
-    "click",
-    verifyOtp
-);
-
-
-otpInput.addEventListener(
-    "keydown",
-    event => {
-
-        if (
-            event.key ===
-            "Enter"
-        ) {
-
-            verifyOtp();
-
-        }
-
-    }
-);
-
-
-// Allow numbers only
 
 otpInput.addEventListener(
     "input",
     () => {
 
         otpInput.value =
-            otpInput.value
+            otpInput
+                .value
                 .replace(
                     /\D/g,
                     ""
@@ -547,6 +473,40 @@ otpInput.addEventListener(
     }
 );
 
+
+// ============================================================
+// VERIFY OTP BUTTON
+// ============================================================
+
+verifyOtpBtn.addEventListener(
+    "click",
+    verifyOtp
+);
+
+
+// ============================================================
+// PRESS ENTER TO VERIFY OTP
+// ============================================================
+
+otpInput.addEventListener(
+    "keydown",
+    event => {
+
+        if (
+            event.key === "Enter"
+        ) {
+
+            verifyOtp();
+
+        }
+
+    }
+);
+
+
+// ============================================================
+// VERIFY OTP
+// ============================================================
 
 async function verifyOtp() {
 
@@ -597,11 +557,8 @@ async function verifyOtp() {
 
 
         verifyOtpBtn.innerHTML = `
-
             <i class="fa-solid fa-spinner fa-spin"></i>
-
             Verifying...
-
         `;
 
 
@@ -625,17 +582,16 @@ async function verifyOtp() {
             await fetch(
                 `${API_URL}/verify-otp`,
                 {
-                    method:
-                        "POST",
-
-                    body:
-                        formData
+                    method: "POST",
+                    body: formData
                 }
             );
 
 
         const data =
-            await response.json();
+            await readJsonResponse(
+                response
+            );
 
 
         if (
@@ -644,7 +600,7 @@ async function verifyOtp() {
 
             throw new Error(
                 data.detail ||
-                "OTP verification failed"
+                "OTP verification failed."
             );
 
         }
@@ -678,12 +634,11 @@ async function verifyOtp() {
         );
 
 
-    } catch (
-        error
-    ) {
+    } catch (error) {
 
         showOtpError(
-            error.message
+            error.message ||
+            "OTP verification failed."
         );
 
 
@@ -707,100 +662,114 @@ async function verifyOtp() {
 
 resendOtpBtn.addEventListener(
     "click",
-    async () => {
-
-        if (
-            !pendingEmail
-        ) {
-
-            showOtpError(
-                "Registration session not found."
-            );
-
-            return;
-
-        }
+    resendOtp
+);
 
 
-        try {
+async function resendOtp() {
 
-            resendOtpBtn.disabled =
-                true;
+    if (
+        !pendingEmail
+    ) {
 
+        showOtpError(
+            "Registration session not found. Please register again."
+        );
 
-            resendOtpBtn.textContent =
-                "Sending...";
-
-
-            const formData =
-                new FormData();
-
-
-            formData.append(
-                "email",
-                pendingEmail
-            );
-
-
-            const response =
-                await fetch(
-                    `${API_URL}/resend-otp`,
-                    {
-                        method:
-                            "POST",
-
-                        body:
-                            formData
-                    }
-                );
-
-
-            const data =
-                await response.json();
-
-
-            if (
-                !response.ok
-            ) {
-
-                throw new Error(
-                    data.detail ||
-                    "Could not resend OTP"
-                );
-
-            }
-
-
-            otpMessage.className =
-                "message success";
-
-
-            otpMessage.textContent =
-                "New OTP sent successfully.";
-
-
-        } catch (
-            error
-        ) {
-
-            showOtpError(
-                error.message
-            );
-
-
-        } finally {
-
-            resendOtpBtn.disabled =
-                false;
-
-
-            resendOtpBtn.textContent =
-                "Resend OTP";
-
-        }
+        return;
 
     }
-);
+
+
+    try {
+
+        resendOtpBtn.disabled =
+            true;
+
+
+        resendOtpBtn.innerHTML = `
+            <i class="fa-solid fa-spinner fa-spin"></i>
+            Sending...
+        `;
+
+
+        const formData =
+            new FormData();
+
+
+        formData.append(
+            "email",
+            pendingEmail
+        );
+
+
+        const response =
+            await fetch(
+                `${API_URL}/resend-otp`,
+                {
+                    method: "POST",
+                    body: formData
+                }
+            );
+
+
+        const data =
+            await readJsonResponse(
+                response
+            );
+
+
+        if (
+            !response.ok
+        ) {
+
+            throw new Error(
+                data.detail ||
+                "Unable to resend OTP."
+            );
+
+        }
+
+
+        otpMessage.className =
+            "message success";
+
+
+        otpMessage.innerHTML = `
+            New OTP sent successfully.<br>
+            Please check your Inbox.
+            If it is not there,
+            check your <strong>Spam or Junk folder</strong>.
+        `;
+
+
+        otpInput.value =
+            "";
+
+
+        otpInput.focus();
+
+
+    } catch (error) {
+
+        showOtpError(
+            error.message ||
+            "Unable to resend OTP."
+        );
+
+
+    } finally {
+
+        resendOtpBtn.disabled =
+            false;
+
+
+        resendOtpBtn.textContent =
+            "Resend OTP";
+
+    }
+
+}
 
 
 // ============================================================
@@ -811,6 +780,10 @@ backBtn.addEventListener(
     "click",
     () => {
 
+        pendingEmail =
+            null;
+
+
         otpSection.style.display =
             "none";
 
@@ -819,54 +792,22 @@ backBtn.addEventListener(
             "block";
 
 
-        registerTab.click();
+        otpInput.value =
+            "";
+
+
+        otpMessage.textContent =
+            "";
+
+
+        clearMessage();
 
     }
 );
 
 
 // ============================================================
-// AFTER OTP SUCCESS
-// ============================================================
-
-function showLoginAfterVerification(
-    email
-) {
-
-    otpSection.style.display =
-        "none";
-
-
-    authSection.style.display =
-        "block";
-
-
-    loginTab.click();
-
-
-    emailInput.value =
-        email;
-
-
-    passwordInput.value =
-        "";
-
-
-    message.className =
-        "message success";
-
-
-    message.textContent =
-        "Account verified. Login with your password.";
-
-
-    passwordInput.focus();
-
-}
-
-
-// ============================================================
-// LOGIN
+// LOGIN USER
 // ============================================================
 
 async function loginUser(
@@ -881,11 +822,8 @@ async function loginUser(
 
 
         submitBtn.innerHTML = `
-
             <i class="fa-solid fa-spinner fa-spin"></i>
-
             Logging in...
-
         `;
 
 
@@ -909,17 +847,16 @@ async function loginUser(
             await fetch(
                 `${API_URL}/login`,
                 {
-                    method:
-                        "POST",
-
-                    body:
-                        formData
+                    method: "POST",
+                    body: formData
                 }
             );
 
 
         const data =
-            await response.json();
+            await readJsonResponse(
+                response
+            );
 
 
         if (
@@ -928,7 +865,23 @@ async function loginUser(
 
             throw new Error(
                 data.detail ||
-                "Login failed"
+                "Login failed."
+            );
+
+        }
+
+
+        // TOKEN
+
+        const token =
+            data.access_token ||
+            data.token;
+
+
+        if (!token) {
+
+            throw new Error(
+                "Login succeeded but no authentication token was returned."
             );
 
         }
@@ -936,14 +889,22 @@ async function loginUser(
 
         localStorage.setItem(
             "cloudvault_token",
-            data.access_token
+            token
         );
+
+
+        // USER INFORMATION
+
+        const userData =
+            data.user || {
+                email: email
+            };
 
 
         localStorage.setItem(
             "cloudvault_user",
             JSON.stringify(
-                data.user
+                userData
             )
         );
 
@@ -963,16 +924,15 @@ async function loginUser(
                     "index.html";
 
             },
-            600
+            700
         );
 
 
-    } catch (
-        error
-    ) {
+    } catch (error) {
 
         showError(
-            error.message
+            error.message ||
+            "Unable to login."
         );
 
 
@@ -993,7 +953,113 @@ async function loginUser(
 
 
 // ============================================================
-// ERROR HELPERS
+// SHOW LOGIN AFTER EMAIL VERIFICATION
+// ============================================================
+
+function showLoginAfterVerification(
+    email
+) {
+
+    otpSection.style.display =
+        "none";
+
+
+    authSection.style.display =
+        "block";
+
+
+    mode =
+        "login";
+
+
+    loginTab
+        .classList
+        .add("active");
+
+
+    registerTab
+        .classList
+        .remove("active");
+
+
+    nameGroup.style.display =
+        "none";
+
+
+    formTitle.textContent =
+        "Welcome Back";
+
+
+    formSubtitle.textContent =
+        "Your email is verified. Login to continue.";
+
+
+    submitBtn.textContent =
+        "Login";
+
+
+    emailInput.value =
+        email;
+
+
+    passwordInput.value =
+        "";
+
+
+    passwordInput.setAttribute(
+        "autocomplete",
+        "current-password"
+    );
+
+
+    message.className =
+        "message success";
+
+
+    message.textContent =
+        "Account created successfully. Please login.";
+
+
+    setTimeout(
+        () => {
+
+            passwordInput.focus();
+
+        },
+        100
+    );
+
+}
+
+
+// ============================================================
+// SAFE JSON RESPONSE
+// ============================================================
+
+async function readJsonResponse(
+    response
+) {
+
+    try {
+
+        return await response.json();
+
+    } catch (error) {
+
+        return {
+            detail:
+                response.ok
+                    ? ""
+                    : `Server error (${response.status})`
+        };
+
+    }
+
+}
+
+
+// ============================================================
+// ERROR MESSAGE
 // ============================================================
 
 function showError(
@@ -1010,6 +1076,10 @@ function showError(
 }
 
 
+// ============================================================
+// OTP ERROR
+// ============================================================
+
 function showOtpError(
     text
 ) {
@@ -1023,6 +1093,10 @@ function showOtpError(
 
 }
 
+
+// ============================================================
+// CLEAR MESSAGE
+// ============================================================
 
 function clearMessage() {
 

@@ -10,9 +10,7 @@
         content="width=device-width, initial-scale=1.0"
     >
 
-    <title>
-        CloudVault - Login
-    </title>
+    <title>CloudVault - Login</title>
 
     <link
         rel="stylesheet"
@@ -65,6 +63,10 @@
                 0 25px 60px
                 rgba(30, 64, 175, 0.15);
         }
+
+        /* ============================= */
+        /* LEFT SIDE                     */
+        /* ============================= */
 
         .left {
             padding: 60px;
@@ -121,8 +123,13 @@
 
             display: flex;
             align-items: center;
+
             gap: 12px;
         }
+
+        /* ============================= */
+        /* RIGHT SIDE                    */
+        /* ============================= */
 
         .right {
             padding: 50px;
@@ -130,15 +137,23 @@
 
         .right h2 {
             font-size: 31px;
+
             color: #111827;
+
             margin-bottom: 8px;
         }
 
         .subtitle {
             color: #64748b;
+
             margin-bottom: 25px;
+
             line-height: 1.5;
         }
+
+        /* ============================= */
+        /* LOGIN / REGISTER TABS         */
+        /* ============================= */
 
         .tabs {
             display: flex;
@@ -166,17 +181,23 @@
             background: transparent;
 
             font-weight: 600;
+
             font-size: 15px;
         }
 
         .tab.active {
             color: #2563eb;
+
             background: white;
 
             box-shadow:
                 0 3px 10px
                 rgba(0,0,0,0.08);
         }
+
+        /* ============================= */
+        /* FORM                          */
+        /* ============================= */
 
         .form-group {
             margin-bottom: 18px;
@@ -196,17 +217,20 @@
             position: relative;
         }
 
-        .input-box i {
+        /* LEFT ICON */
+
+        .input-icon {
             position: absolute;
 
             left: 15px;
 
             top: 50%;
 
-            transform:
-                translateY(-50%);
+            transform: translateY(-50%);
 
             color: #94a3b8;
+
+            pointer-events: none;
         }
 
         .input-box input {
@@ -219,24 +243,74 @@
             border:
                 1px solid #dbe3ef;
 
-            border-radius:
-                11px;
+            border-radius: 11px;
 
-            outline:
-                none;
+            outline: none;
 
-            font-size:
-                15px;
+            font-size: 15px;
+
+            transition: 0.2s;
         }
 
         .input-box input:focus {
-            border-color:
-                #3b82f6;
+            border-color: #3b82f6;
 
             box-shadow:
                 0 0 0 3px
                 rgba(59,130,246,0.08);
         }
+
+        /* ============================= */
+        /* PASSWORD EYE                  */
+        /* ============================= */
+
+        .password-box input {
+            padding-right: 52px;
+        }
+
+        .password-toggle {
+            position: absolute;
+
+            right: 15px;
+
+            top: 50%;
+
+            transform: translateY(-50%);
+
+            width: 35px;
+            height: 35px;
+
+            border: none;
+
+            background: transparent;
+
+            color: #64748b;
+
+            cursor: pointer;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            font-size: 16px;
+
+            border-radius: 50%;
+        }
+
+        .password-toggle:hover {
+            color: #2563eb;
+
+            background: #eff6ff;
+        }
+
+        .password-toggle:focus {
+            outline:
+                2px solid #bfdbfe;
+        }
+
+        /* ============================= */
+        /* BUTTON                        */
+        /* ============================= */
 
         .submit-btn {
             width: 100%;
@@ -245,8 +319,7 @@
 
             border: none;
 
-            border-radius:
-                11px;
+            border-radius: 11px;
 
             color: white;
 
@@ -257,22 +330,28 @@
                     #4f46e5
                 );
 
-            font-size:
-                16px;
+            font-size: 16px;
 
-            font-weight:
-                700;
+            font-weight: 700;
 
-            cursor:
-                pointer;
+            cursor: pointer;
 
             margin-top: 7px;
         }
 
+        .submit-btn:hover {
+            opacity: 0.94;
+        }
+
         .submit-btn:disabled {
             opacity: 0.6;
+
             cursor: not-allowed;
         }
+
+        /* ============================= */
+        /* MESSAGES                      */
+        /* ============================= */
 
         .message {
             min-height: 24px;
@@ -298,7 +377,9 @@
             display: none;
         }
 
-        /* OTP AREA */
+        /* ============================= */
+        /* OTP SECTION                   */
+        /* ============================= */
 
         #otpSection {
             display: none;
@@ -339,10 +420,36 @@
             margin-top: 5px;
         }
 
+        /* NEW NOTICE */
+
+        .otp-notice {
+            margin-top: 18px;
+
+            padding: 13px 15px;
+
+            border-radius: 10px;
+
+            background: #fff7ed;
+
+            border: 1px solid #fed7aa;
+
+            color: #9a3412;
+
+            font-size: 13px;
+
+            line-height: 1.6;
+
+            text-align: left;
+        }
+
+        .otp-notice i {
+            margin-right: 6px;
+        }
+
         .otp-input {
             width: 100%;
 
-            margin-top: 25px;
+            margin-top: 20px;
 
             padding: 17px;
 
@@ -409,6 +516,10 @@
             line-height: 1.5;
         }
 
+        /* ============================= */
+        /* MOBILE                        */
+        /* ============================= */
+
         @media (
             max-width: 750px
         ) {
@@ -423,7 +534,9 @@
             }
 
             .right {
-                padding: 35px 25px;
+                padding:
+                    35px
+                    25px;
             }
         }
 
@@ -438,7 +551,9 @@
 <div class="container">
 
 
-    <!-- LEFT SIDE -->
+    <!-- ============================== -->
+    <!-- LEFT SIDE                      -->
+    <!-- ============================== -->
 
     <div class="left">
 
@@ -461,6 +576,7 @@
 
 
         <div class="features">
+
 
             <div class="feature">
 
@@ -506,17 +622,22 @@
 
             </div>
 
+
         </div>
 
     </div>
 
 
-    <!-- RIGHT SIDE -->
+    <!-- ============================== -->
+    <!-- RIGHT SIDE                     -->
+    <!-- ============================== -->
 
     <div class="right">
 
 
-        <!-- LOGIN / REGISTER AREA -->
+        <!-- ========================== -->
+        <!-- LOGIN / REGISTER           -->
+        <!-- ========================== -->
 
         <div id="authSection">
 
@@ -530,13 +651,14 @@
                 class="subtitle"
                 id="formSubtitle"
             >
-
                 Login to your CloudVault account.
-
             </p>
 
 
+            <!-- TABS -->
+
             <div class="tabs">
+
 
                 <button
                     type="button"
@@ -555,30 +677,39 @@
                     Register
                 </button>
 
+
             </div>
 
 
+            <!-- FORM -->
+
             <form id="authForm">
 
+
+                <!-- NAME -->
 
                 <div
                     class="form-group"
                     id="nameGroup"
                 >
 
-                    <label>
+                    <label for="name">
                         Full Name
                     </label>
 
 
                     <div class="input-box">
 
-                        <i class="fa-solid fa-user"></i>
+                        <i
+                            class="fa-solid fa-user input-icon"
+                        ></i>
+
 
                         <input
                             type="text"
                             id="name"
-                            placeholder="Enter your name"
+                            placeholder="Enter your full name"
+                            autocomplete="name"
                         >
 
                     </div>
@@ -586,21 +717,27 @@
                 </div>
 
 
+                <!-- EMAIL -->
+
                 <div class="form-group">
 
-                    <label>
+                    <label for="email">
                         Email Address
                     </label>
 
 
                     <div class="input-box">
 
-                        <i class="fa-solid fa-envelope"></i>
+                        <i
+                            class="fa-solid fa-envelope input-icon"
+                        ></i>
+
 
                         <input
                             type="email"
                             id="email"
                             placeholder="Enter your email"
+                            autocomplete="email"
                             required
                         >
 
@@ -609,28 +746,58 @@
                 </div>
 
 
+                <!-- PASSWORD -->
+
                 <div class="form-group">
 
-                    <label>
+                    <label for="password">
                         Password
                     </label>
 
 
-                    <div class="input-box">
+                    <div
+                        class="input-box password-box"
+                    >
 
-                        <i class="fa-solid fa-lock"></i>
+                        <i
+                            class="fa-solid fa-lock input-icon"
+                        ></i>
+
 
                         <input
                             type="password"
                             id="password"
-                            placeholder="Minimum 6 characters"
+                            placeholder="Enter your password"
+                            autocomplete="current-password"
+                            minlength="6"
                             required
                         >
+
+
+                        <!-- PASSWORD EYE -->
+
+                        <button
+                            type="button"
+                            class="password-toggle"
+                            id="togglePassword"
+                            aria-label="Show password"
+                            title="Show password"
+                        >
+
+                            <i
+                                class="fa-solid fa-eye"
+                                id="passwordEyeIcon"
+                            ></i>
+
+                        </button>
+
 
                     </div>
 
                 </div>
 
+
+                <!-- SUBMIT -->
 
                 <button
                     type="submit"
@@ -641,10 +808,10 @@
                 </button>
 
 
-                <p
-                    class="message"
+                <div
                     id="message"
-                ></p>
+                    class="message"
+                ></div>
 
 
             </form>
@@ -653,7 +820,9 @@
         </div>
 
 
-        <!-- OTP VERIFICATION AREA -->
+        <!-- ========================== -->
+        <!-- OTP SECTION                -->
+        <!-- ========================== -->
 
         <div id="otpSection">
 
@@ -663,7 +832,9 @@
 
                 <div class="otp-icon">
 
-                    <i class="fa-solid fa-envelope-circle-check"></i>
+                    <i
+                        class="fa-solid fa-envelope-circle-check"
+                    ></i>
 
                 </div>
 
@@ -677,24 +848,50 @@
 
                     We sent a 6-digit verification code to
 
-                    <div
-                        class="otp-email"
-                        id="otpEmailText"
-                    ></div>
-
                 </p>
 
+
+                <div
+                    class="otp-email"
+                    id="otpEmailText"
+                ></div>
+
+
+                <!-- SPAM NOTICE -->
+
+                <div class="otp-notice">
+
+                    <i
+                        class="fa-solid fa-circle-info"
+                    ></i>
+
+                    <strong>
+                        OTP sent!
+                    </strong>
+
+                    Please check your Inbox.
+
+                    If you don't see the email,
+                    please check your
+                    <strong>Spam or Junk folder.</strong>
+
+                </div>
+
+
+                <!-- OTP INPUT -->
 
                 <input
                     type="text"
                     id="otpInput"
                     class="otp-input"
+                    placeholder="000000"
                     maxlength="6"
                     inputmode="numeric"
                     autocomplete="one-time-code"
-                    placeholder="000000"
                 >
 
+
+                <!-- VERIFY -->
 
                 <button
                     type="button"
@@ -707,11 +904,13 @@
                 </button>
 
 
-                <p
-                    class="message"
+                <div
                     id="otpMessage"
-                ></p>
+                    class="message"
+                ></div>
 
+
+                <!-- OTP ACTIONS -->
 
                 <div class="otp-actions">
 
@@ -722,7 +921,9 @@
                         id="backBtn"
                     >
 
-                        <i class="fa-solid fa-arrow-left"></i>
+                        <i
+                            class="fa-solid fa-arrow-left"
+                        ></i>
 
                         Back
 
@@ -745,7 +946,8 @@
 
                 <p class="verification-note">
 
-                    The verification code expires in 10 minutes.
+                    The verification code expires in
+                    10 minutes.
 
                 </p>
 
@@ -762,7 +964,114 @@
 </div>
 
 
-<script src="js/auth.js?v=2"></script>
+<!-- ================================= -->
+<!-- AUTH JAVASCRIPT                   -->
+<!-- ================================= -->
+
+<script src="../js/auth.js"></script>
+
+
+<!-- ================================= -->
+<!-- PASSWORD SHOW / HIDE              -->
+<!-- ================================= -->
+
+<script>
+
+    const togglePassword =
+        document.getElementById(
+            "togglePassword"
+        );
+
+
+    const passwordField =
+        document.getElementById(
+            "password"
+        );
+
+
+    const passwordEyeIcon =
+        document.getElementById(
+            "passwordEyeIcon"
+        );
+
+
+    togglePassword.addEventListener(
+        "click",
+        function () {
+
+
+            const passwordVisible =
+                passwordField.type ===
+                "text";
+
+
+            if (passwordVisible) {
+
+                passwordField.type =
+                    "password";
+
+
+                passwordEyeIcon
+                    .classList
+                    .remove(
+                        "fa-eye-slash"
+                    );
+
+
+                passwordEyeIcon
+                    .classList
+                    .add(
+                        "fa-eye"
+                    );
+
+
+                togglePassword.setAttribute(
+                    "aria-label",
+                    "Show password"
+                );
+
+
+                togglePassword.title =
+                    "Show password";
+
+
+            } else {
+
+
+                passwordField.type =
+                    "text";
+
+
+                passwordEyeIcon
+                    .classList
+                    .remove(
+                        "fa-eye"
+                    );
+
+
+                passwordEyeIcon
+                    .classList
+                    .add(
+                        "fa-eye-slash"
+                    );
+
+
+                togglePassword.setAttribute(
+                    "aria-label",
+                    "Hide password"
+                );
+
+
+                togglePassword.title =
+                    "Hide password";
+
+            }
+
+        }
+    );
+
+</script>
+
 
 </body>
 
