@@ -8,3 +8,4 @@ python-dotenv
 azure-storage-blob
 email-validator
 requests
+psycopg2-binary
